@@ -1,4 +1,4 @@
-const API_KEY = 'XMM0T2BJS45S4A92';
+const API_KEY = 'KP17H5ECVT57U75L';
 function cdfNormal(x, mean = 0, std = 1) {
     const z = (x - mean) / (std * Math.sqrt(2));
     const sign = z < 0 ? -1 : 1;
@@ -33,13 +33,14 @@ document.getElementById("priceform").addEventListener("submit", function(event){
     fetchStockPrice(symbol);}   
 );
 function getIV(){
-    const k = document.getElementById('strikeprice').value;
+    var k = parseFloat(document.getElementById('strikeprice').value);
     var symbol = document.getElementById("stockticker").value;
+    const exp = document.getElementById("expiry").value ;
     fetch(`https://www.alphavantage.co/query?function=HISTORICAL_OPTIONS&symbol=${symbol}&apikey=${API_KEY}`)
     .then(response=>response.json())
     .then(data =>{
         for(const dict of data['data']){
-            if(dict['type'] == 'call' && dict['strike'] == k){
+            if(dict['type'] == 'call' && dict['strike'] == k.toFixed(2) && dict['expiration']==exp){
                 const iv = dict['implied_volatility'];
                 document.getElementById("iv").value = iv;
                 break;
@@ -70,6 +71,7 @@ function BlackScholesCall(spot){
     
 }
 
+
 function calculatecc(){
     
     const optprice = parseFloat(document.getElementById('optprice').value) || 0;
@@ -81,8 +83,140 @@ function calculatecc(){
 document.getElementById('optprice').addEventListener("input", function(event){
     calculatecc();});
 document.getElementById('connum').addEventListener("input", function(event){ 
-    calculatecc();});
+    calculatecc();
+    if(document.getElementById('b/s').value=='Buy'){
+    callchart();
+    const optprice = parseFloat(document.getElementById('optprice').value) || 0;
+    const k = parseFloat(document.getElementById('strikeprice').value) || 0;
+    const breakeven = optprice + k;
+    const maxloss = document.getElementById('contractcost').textContent;
+    document.getElementById('breakeven').textContent = `$${breakeven.toFixed(2)}`;
+    document.getElementById('max').textContent = maxloss;}
+    else{
+        sellCallChart()
+        const optprice = parseFloat(document.getElementById('optprice').value) || 0;
+        const k = parseFloat(document.getElementById('strikeprice').value) || 0;
+        const breakeven = k + optprice;
+        const quantity = parseInt(document.getElementById('connum').value) || 0;
+        const maxProfit = optprice * quantity * 100;
+        document.getElementById('breakeven').textContent = `$${breakeven.toFixed(2)}`;
+        document.getElementById('max').textContent = `$${maxProfit.toFixed(2)} (Max Profit as max loss is unlimited.)`;
+    }
+    });
 
+function sellCallChart() {
+    const k = parseFloat(document.getElementById('strikeprice').value) || 0;
+    const optprice = parseFloat(document.getElementById('optprice').value) || 0;
+    const quantity = parseInt(document.getElementById('connum').value) || 0;
+    const premium = optprice * quantity * 100;
+    const x = [];
+    const y = [];
+    for (let i = k/2; i <= k; i++) {
+        x.push(i);
+        y.push(premium);
+    }
+    let j = premium;
+    for (let i = k+1; i <= k+20; i++) {
+        j -= (100 * quantity);
+        x.push(i);
+        y.push(j);
+    }
+    // if (window.mySellCallChart) {
+    //     window.mySellCallChart.destroy();
+    // }
+    if(window.myChart){
+        window.myChart.destroy();
+    }
+
+    window.mySellCallChart = new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: x,
+            datasets: [{
+                label: 'Short Call Payoff',
+                data: y,
+                borderColor: '#ff6347', 
+                backgroundColor: 'rgba(255, 99, 71, 0.1)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Stock Price'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'P&L ($)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+
+function callchart(){
+    const k = parseFloat(document.getElementById('strikeprice').value) || 0;
+    const optprice = parseFloat(document.getElementById('optprice').value) || 0;
+    const quantity = parseInt(document.getElementById('connum').value) || 0;
+    const tc = optprice * quantity * 100;
+    const x = [];
+    const y = [];
+for(let i=k/2;i<=k;i++){
+    x.push(i);
+    y.push(-tc);
+}
+let j = -tc;
+for(let i=k+1;i<=k+20;i++){
+    j = j+(100*quantity);
+x.push(i);
+y.push(j);
+}
+if (window.mySellCallChart) {
+    window.mySellCallChart.destroy();
+}
+// if (window.myChart) {
+//     window.myChart.destroy();
+// }
+window.myChart = new Chart("myChart", {
+    type: "line",
+    data: {
+        labels: x,
+        datasets: [{
+            label: 'Option Payoff',
+            data: y,
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Stock Price',
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'P&L ($)'
+                }
+            }
+        }
+    }
+});
+}
 
 
 
