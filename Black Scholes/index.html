@@ -12,16 +12,17 @@
     />
     <title>Options Pricer</title>
   </head>
-  <body>
-    <div class="navbar">
-      <nav class="nav">
-        <a href="index.html">Home</a>
-        <a href="strategies.html">Strategies</a>
-        <a href="greeks.html">Greeks</a>
-        <a href="blackscholes.html">Black Scholes Equation</a>
-      </nav>
+  <body class="main">
+    <div class="topbar">
+      <a href="index.html">Home</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="greeks.html">Greeks</a>
+      <a href="blackscholes.html">Black Scholes Equation</a>
     </div>
-    <div class="introduction">Welcome to my website on Options!</div>
+    <div id="introduction" style="padding-top: 30px">
+      Welcome to my website on Options! <br />*API is limited to retrieval of IV
+      from previous trading day.
+    </div>
     <center>
       <form method="POST" id="priceform">
         <table>
@@ -54,7 +55,7 @@
           <tr>
             <td>Buy or Sell:</td>
             <td>
-              <select name="b/s" id="">
+              <select name="b/s" id="b/s">
                 <option value="Buy">Buy</option>
                 <option value="Sell">Sell</option>
               </select>
@@ -69,7 +70,10 @@
           <tr>
             <td>Implied Volatility:</td>
             <td><input type="text" id="iv" /> %</td>
-            <td>Use market IV?</td>
+            <td>Contract Expiry Date for Market IV:</td>
+            <td>
+              <input type="text" placeholder="eg. 2025-05-23" id="expiry" />
+            </td>
             <td><input type="button" id="fetch" value="Fetch" /></td>
           </tr>
           <tr>
@@ -81,26 +85,41 @@
             <td><input type="text" id="t" /></td>
           </tr>
           <tr>
+            <td>Calculate Option price:&nbsp;</td>
+            <td>
+              <input type="submit" name="" id="" class="subbtn" />
+            </td>
+          </tr>
+          <tr>
             <td>Theo:</td>
             <td><input type="text" id="optprice" /></td>
           </tr>
           <tr>
             <td>Contracts:</td>
-            <td><input type="text" value="1" id="connum" /> x100</td>
+            <td><input type="text" value="0" id="connum" /> x100</td>
           </tr>
           <tr>
             <td>Total Cost:</td>
             <td id="contractcost"></td>
           </tr>
           <tr>
-            <td align="right">
-              <input type="submit" name="" id="" class="subbtn" />
-            </td>
+            <td>Maximum Drawdown:</td>
+            <td id="max"></td>
+          </tr>
+          <tr>
+            <td>Breakeven:</td>
+            <td id="breakeven"></td>
           </tr>
         </table>
       </form>
     </center>
+    <table>
+      <tr>
+        <td><canvas id="myChart" height="500" width="800"></canvas></td>
+      </tr>
+    </table>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script src="client.js"></script>
   </body>
 </html>
