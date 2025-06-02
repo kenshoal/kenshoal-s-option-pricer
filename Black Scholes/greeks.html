@@ -5,14 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>Greeks</title>
-    <div class="navbar">
-        <nav class="nav">
-          <a href="index.html">Home</a>
-          <a href="strategies.html">Strategies</a>
-          <a href="greeks.html">Greeks</a>
-          <a href="blackscholes.html">Black Scholes Equation</a>
-        </nav>
-      </div>
+
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -20,7 +13,75 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body class="main">
+    <div class="topbar">
+      <a href="index.html">Home</a>
+      <a href="strategies.html">Strategies</a>
+      <a href="greeks.html">Greeks</a>
+      <a href="blackscholes.html">Black Scholes Equation</a>
+    </div>
+    <h3 id="introduction" style="padding-top: 30px">
+      This page serves to keep track of greeks and how they work.
+    </h3>
 
+    <div class="container">
+      <div class="nav.dropdown">
+        <ul class="nav flex-column">
+          <li class="nav-item"><a href="#delta" class="nav-link">Delta</a></li>
+          <li class="nav-item"><a href="#gamma" class="nav-link">Gamma</a></li>
+          <li class="nav-item"><a href="#rho" class="nav-link">Rho</a></li>
+          <li class="nav-item"><a href="#theta" class="nav-link">Theta</a></li>
+          <li class="nav-item"><a href="#vega" class="nav-link">Vega</a></li>
+        </ul>
+      </div>
+      <div class="para">
+        <p id="delta">
+          <strong>Delta:</strong> Delta typically measures the responsiveness of
+          the option price with a $1 change in the underlying price. One can
+          think of delta in 3 ways.
+        </p>
+        <ol>
+          <li>
+            How many futures to buy/sell in order to hedge against 100 of the
+            same option
+          </li>
+          <li>The probability that the option will expire in the money</li>
+          <li>
+            How responsive the option price is with regard to a change in the
+            underlying price.
+          </li>
+        </ol>
+        <p>
+          Calls: δ[0,1] <br />
+          Puts: δ[-1,0]
+          <br />
+          <br />
+          Description: Take for example a call option with δ = 0.5, its price
+          will increase by $0.50 with every $1 increase in the underlying price.
+          <br />
+          On the other hand, a put option with δ = -0.4 signifies that its price
+          will increase by $0.40 with every $1 decrease in the underlying price.
+        </p>
+        <img src="delta.png" alt="" />
+        <br />
+        <br />
+        <br />
+        <br />
+        <p id="gamma">
+          <strong>Gamma:</strong> Gamma typically measures the rate of change of
+          an option's delta for a $1 move in the underlying asset's price. If an
+          option has high gamma,it means that its delta will change drastically
+          with a small change in price, potentially leading to it being more
+          sensitive to price changes.
+          <br />
+          <br />
+          Gamma is highest when the option is at-the-money, and lowest for
+          options which are deep in- or out-the-money.
+          <br />
+          <br />
+          Description: Take for example
+        </p>
+      </div>
+    </div>
   </body>
 </html>
